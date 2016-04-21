@@ -4,9 +4,14 @@
 #include<math.h>
 #include"drawer.h"
 
+class cypher {
+
+};
+
 void display() {
 	drawText("LOCK",L_PADD,.7, 1, 2);
 	drawText("------------------------------------------", L_PADD, .65, 3, 2);
+
 }
 
 void renderScene(void)
