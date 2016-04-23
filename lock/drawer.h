@@ -2,9 +2,9 @@
 
 #include<string>
 
-#define WIN_H 800
-#define WIN_W 600
-#define R_PADD 0.1
+#define WIN_H 700
+#define WIN_W 500
+#define R_PADD -0.1
 #define L_PADD -0.8
 #define MSG "Attempts left : "
 
@@ -12,11 +12,16 @@
 
 
 
-GLfloat color[4][3] = {
+GLfloat color[9][3] = {
 	{1.0,0,0},				//r
 	{0,1.0,0},				//g
 	{0,0,1.0},				//b
-	{1,1,1}					//w
+	{1,1,1},				//w
+	{.5,.5,.5},				//gr
+	{.5,.5,0},				//cr
+	{0,.5,.5},				//teal
+	{.5,0,.5},				//pink
+	{1,1,0}					//yellow
 };
 
 
