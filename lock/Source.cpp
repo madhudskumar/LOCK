@@ -123,6 +123,15 @@ void renderScene(void)
 	glutSwapBuffers();
 }
 
+void myFunc(int button, int state,int x, int y){
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && status == "LOCKED") {
+		status = "UNLOCKED";
+		glutPostRedisplay();
+	}else{
+		status = "LOCKED";
+		glutPostRedisplay();
+	}
+}
 
 int main(int argc, char **argv)
 {
@@ -132,6 +141,8 @@ int main(int argc, char **argv)
 	glutInitWindowSize(WIN_H, WIN_W);
 	glutCreateWindow("LOCK");
 	
+
+	glutMouseFunc(myFunc);
 	glutDisplayFunc(renderScene);
 	glutMainLoop();
 	return 0;
