@@ -8,6 +8,10 @@
 #define L_PADD -0.8
 #define MSG "Attempts left : "
 
+
+
+
+
 GLfloat color[4][3] = {
 	{1.0,0,0},				//r
 	{0,1.0,0},				//g
