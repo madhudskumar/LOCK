@@ -9,9 +9,6 @@
 #define MSG "Attempts left : "
 
 
-
-
-
 GLfloat color[10][3] = {
 	{1.0,0,0},				//r
 	{0,1.0,0},				//g
