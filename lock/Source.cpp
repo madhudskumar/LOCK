@@ -29,6 +29,11 @@ void initTextCol() {
 	s1_c = s2_c = s3_c = 4;
 }
 
+struct flags {
+	int attemt_valid = 1;
+	int locked = 1;
+}disp_flag;
+
 GLfloat t_1[3][2] = {
 	{ -.7, 0.2 },	//top
 	{ -.8, 0 },		//left
@@ -83,36 +88,45 @@ cypher obj;
 cypher headObj;
 
 void display() {
-	//Header
-	drawText(status,L_PADD,.7, 1, 2);
-	drawText("------------------------------", L_PADD, .65, 3, 2);
-	
-	drawText(MSG, R_PADD, .6, 0, 0);
-	drawAttemptSwitch(lp_ct, R_PADD + .19, .6, 1, 2);
+	if (disp_flag.attemt_valid && disp_flag.locked) {
+		//Header
+		drawText(status, L_PADD, .7, 1, 2);
+		drawText("------------------------------", L_PADD, .65, 3, 2);
 
-	//Body
-	//>triangles
-	drawTriangle(t_1, t_1_c);
-	drawTriangle(t_2, t_2_c);
-	drawTriangle(t_3, t_3_c);
-	initColors();
-	//>sqiares
-	drawRectangle(s_1, s1_c);
-	drawRectangle(s_2, s2_c);
-	drawRectangle(s_3, s3_c);
-	//>text
-	drawAttemptSwitch(obj.h, -.65, -.28, h_c, 2);
-	drawAttemptSwitch(obj.t, -.65 + .22, -.28, t_c, 2);
-	drawAttemptSwitch(obj.u, -.65 + .44, -.28, u_c, 2);
-	//>go
-	drawTriangle(go, g_c);
+		drawText(MSG, R_PADD, .6, 0, 0);
+		drawAttemptSwitch(lp_ct, R_PADD + .19, .6, 1, 2);
+
+		//Body
+		//>triangles
+		drawTriangle(t_1, t_1_c);
+		drawTriangle(t_2, t_2_c);
+		drawTriangle(t_3, t_3_c);
+		initColors();
+		//>sqiares
+		drawRectangle(s_1, s1_c);
+		drawRectangle(s_2, s2_c);
+		drawRectangle(s_3, s3_c);
+		//>text
+		drawAttemptSwitch(obj.h, -.65, -.28, h_c, 2);
+		drawAttemptSwitch(obj.t, -.65 + .22, -.28, t_c, 2);
+		drawAttemptSwitch(obj.u, -.65 + .44, -.28, u_c, 2);
+		//>go
+		drawTriangle(go, g_c);
+
+		//footer
+		drawRectangle(wrong, 0);
+		drawText("wrong input", L_PADD + .12, -.46, 3, 0);
+
+		drawRectangle(iPlacement, 8);
+		drawText("wrong placement", L_PADD + .12, -.57, 3, 0);
+	}
+	else if (!disp_flag.attemt_valid) {
+		drawText("GAME OVER", -.5, 0, 0, 2);
+	}
+	else if (!disp_flag.locked) {
+		drawText("YOU UNLOCKED", -.5, 0, 1, 2);
+	}
 	
-	//footer
-	drawRectangle(wrong, 0);
-	drawText("wrong input", L_PADD + .12, -.46, 3, 0);
-	
-	drawRectangle(iPlacement, 8);
-	drawText("wrong placement", L_PADD + .12, -.57, 3, 0);
 }
 
 void renderScene(void)
@@ -153,8 +167,16 @@ void myFunc(int button, int state,int x, int y){
 			glutPostRedisplay();
 		}
 		else if (calcHit(5, x, y)) {
+			if ((lp_ct--) == 0) {
+				disp_flag.attemt_valid = 0;
+				glutPostRedisplay();
+				return;
+			}
 			cypher flag = checkCyphers(headObj, obj, &s1_c, &s2_c, &s3_c);
 			g_c = 6;
+			if (flag.h == 1 && flag.t == 1 && flag.u == 1) {
+				disp_flag.locked = 0;
+			}
 			glutPostRedisplay();
 		}
 
