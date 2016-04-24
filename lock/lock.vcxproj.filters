@@ -26,5 +26,11 @@
     <ClInclude Include="drawer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cypher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

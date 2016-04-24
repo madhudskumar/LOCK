@@ -4,6 +4,8 @@
 #include<math.h>
 #include<string>
 #include"drawer.h"
+#include"ray.h"
+#include"cypher.h"
 
 using namespace std;
 
@@ -11,6 +13,21 @@ int lp_ct = 5;
 
 char *status = "LOCKED";
 
+int t_1_c, t_2_c, t_3_c, g_c;
+
+int h_c, t_c, u_c;
+
+int s1_c, s2_c, s3_c;
+
+void initColors() {
+	t_1_c = t_2_c = t_3_c = 6;
+	g_c = 1;
+}
+
+void initTextCol() {
+	h_c = t_c = u_c = 9;
+	s1_c = s2_c = s3_c = 4;
+}
 
 GLfloat t_1[3][2] = {
 	{ -.7, 0.2 },	//top
@@ -30,16 +47,10 @@ GLfloat t_3[3][2] = {
 	{ (-.6 + .44), 0 }		//right
 };
 
-GLfloat t_4[3][2] = {
-	{ (-.7 + .66), 0.2 },	//top
-	{ (-.8 + .66), 0 },		//left
-	{ (-.6 + .66), 0 }		//right
-};
-
 GLfloat go[3][2] = {
-	{.1, -.3},
-	{.1,-.05},
-	{.3, -.16}
+	{.4, -.3},
+	{.4,-.05},
+	{.6, -.16}
 };
 
 GLfloat s_1[2][2] = {
@@ -58,11 +69,6 @@ GLfloat s_3[2][2] = {
 };
 
 
-GLfloat s_4[2][2] = {
-	{ (-.8 + .66), -0.05 },
-	{ (-.6 + .66),-.3 }
-};
-
 GLfloat wrong[2][2] = {
 	{-.8,-.5},
 	{-.7,-.4}
@@ -73,11 +79,8 @@ GLfloat iPlacement[2][2] = {
 	{ -.7,-.51 }
 };
 
-class cypher {
-
-};
-
-
+cypher obj;
+cypher headObj;
 
 void display() {
 	//Header
@@ -85,33 +88,31 @@ void display() {
 	drawText("------------------------------", L_PADD, .65, 3, 2);
 	
 	drawText(MSG, R_PADD, .6, 0, 0);
-	attemptSwitch(lp_ct, R_PADD + .19, .6, 1, 2);
+	drawAttemptSwitch(lp_ct, R_PADD + .19, .6, 1, 2);
 
 	//Body
 	//>triangles
-	drawTriangle(t_1, 6);
-	drawTriangle(t_2, 6);
-	drawTriangle(t_3, 6);
-	drawTriangle(t_4, 6);
-	
+	drawTriangle(t_1, t_1_c);
+	drawTriangle(t_2, t_2_c);
+	drawTriangle(t_3, t_3_c);
+	initColors();
 	//>sqiares
-	drawRectangle(s_1, 4);
-	drawRectangle(s_2, 4);
-	drawRectangle(s_3, 4);
-	drawRectangle(s_4, 4);
-
-	//text
-
+	drawRectangle(s_1, s1_c);
+	drawRectangle(s_2, s2_c);
+	drawRectangle(s_3, s3_c);
+	//>text
+	drawAttemptSwitch(obj.h, -.65, -.28, h_c, 2);
+	drawAttemptSwitch(obj.t, -.65 + .22, -.28, t_c, 2);
+	drawAttemptSwitch(obj.u, -.65 + .44, -.28, u_c, 2);
 	//>go
-	drawTriangle(go, 1);
+	drawTriangle(go, g_c);
+	
 	//footer
 	drawRectangle(wrong, 0);
 	drawText("wrong input", L_PADD + .12, -.46, 3, 0);
 	
 	drawRectangle(iPlacement, 8);
 	drawText("wrong placement", L_PADD + .12, -.57, 3, 0);
-
-
 }
 
 void renderScene(void)
@@ -123,26 +124,53 @@ void renderScene(void)
 	glutSwapBuffers();
 }
 
+void calcHeadCypher() {
+	int head = genCypher();
+	headObj.h = (int)(head / 100);
+	headObj.t = (int)((head % 100) / 10);
+	headObj.u = (int)(head % 10);
+	cout << headObj.h << " " << headObj.t << " " << headObj.u << endl; 
+}
+
 void myFunc(int button, int state,int x, int y){
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && status == "LOCKED") {
-		status = "UNLOCKED";
-		glutPostRedisplay();
-	}else{
-		status = "LOCKED";
-		glutPostRedisplay();
+		if (calcHit(1, x, y)) {
+			t_1_c = 5;
+			obj.h++;
+			obj.h %= 10;
+			glutPostRedisplay();
+		}
+		else if (calcHit(2, x, y)) {
+			t_2_c = 5;
+			obj.t++;
+			obj.t %= 10;
+			glutPostRedisplay();
+		}
+		else if (calcHit(3, x, y)) {
+			t_3_c = 5;
+			obj.u++;
+			obj.u %= 10;
+			glutPostRedisplay();
+		}
+		else if (calcHit(5, x, y)) {
+			cypher flag = checkCyphers(headObj, obj, &s1_c, &s2_c, &s3_c);
+			g_c = 6;
+			glutPostRedisplay();
+		}
+
 	}
 }
 
 int main(int argc, char **argv)
 {
-
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowSize(WIN_H, WIN_W);
 	glutCreateWindow("LOCK");
-	
-
 	glutMouseFunc(myFunc);
+	initColors();
+	initTextCol();
+	calcHeadCypher();
 	glutDisplayFunc(renderScene);
 	glutMainLoop();
 	return 0;
