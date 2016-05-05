@@ -22,8 +22,6 @@ int genCypher() {
 	while (rand < 100)
 		rand = genRandy();
 
-
-	cout << rand;
 	return rand;
 }
 
